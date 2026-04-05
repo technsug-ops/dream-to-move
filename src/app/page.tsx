@@ -27,20 +27,25 @@ type PublicMoveRequest = {
 };
 
 async function getRecentRequests(): Promise<PublicMoveRequest[]> {
-  return prisma.moveRequest.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 6,
-    select: {
-      id: true,
-      fromAddress: true,
-      toAddress: true,
-      moveDate: true,
-      homeSize: true,
-      serviceType: true,
-      status: true,
-      createdAt: true,
-    },
-  });
+  try {
+    return await prisma.moveRequest.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 6,
+      select: {
+        id: true,
+        fromAddress: true,
+        toAddress: true,
+        moveDate: true,
+        homeSize: true,
+        serviceType: true,
+        status: true,
+        createdAt: true,
+      },
+    });
+  } catch (error) {
+    console.error("Failed to load recent requests", error);
+    return [];
+  }
 }
 
 function formatDate(date: Date) {

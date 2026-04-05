@@ -1,14 +1,14 @@
 # dream to move
 
-`dream to move`, tasima talep toplama ve talep durum yonetimi icin hazirlanmis calisan bir MVP'dir.
+`dream to move`, tasima talebi toplayan ve admin tarafinda takip eden bir Next.js + Prisma MVP uygulamasidir.
 
 ## MVP Kapsami
 
 - Musteri talep formu (ana sayfa)
-- Talep kaydi (SQLite + Prisma)
-- Son talepler listesi (public, kisitli alanlar)
+- Talep kaydi (Prisma + PostgreSQL)
+- Son talepler listesi (public, kisitli alan)
 - Admin paneli (`/admin`) ile durum/teklif/not guncelleme
-- Zod ile request validation
+- Zod ile API validation
 
 ## Teknoloji
 
@@ -16,20 +16,20 @@
 - Next.js (App Router)
 - Node.js runtime API route'lari
 - Prisma ORM
-- SQLite
+- PostgreSQL
 
 ## Proje Yapisi
 
 - `src/app/page.tsx`: Ana sayfa + form + son talepler
 - `src/app/admin/page.tsx`: Admin paneli
-- `src/app/api/move-requests/route.ts`: `GET` / `POST` endpoint
-- `src/app/api/move-requests/[id]/status/route.ts`: `PATCH` endpoint
+- `src/app/api/move-requests/route.ts`: `GET` / `POST`
+- `src/app/api/move-requests/[id]/status/route.ts`: `PATCH`
 - `src/lib/move-request.ts`: domain sabitleri + Zod schema
 - `prisma/schema.prisma`: veri modeli
 - `prisma/migrations/*`: migration dosyalari
 - `prisma/seed.mjs`: ornek veri
 
-## Kurulum
+## Local Kurulum
 
 1. Bagimliliklari yukle:
 
@@ -49,30 +49,44 @@ Windows PowerShell:
 Copy-Item .env.example .env
 ```
 
-3. Migration uygula:
+3. `.env` icine calisan bir PostgreSQL baglanti string'i gir.
+
+4. Migration uygula:
 
 ```bash
 npm run db:migrate
 ```
 
-4. (Opsiyonel) Ornek veri ekle:
+5. (Opsiyonel) Seed verisi:
 
 ```bash
 npm run db:seed
 ```
 
-5. Uygulamayi baslat:
+6. Calistir:
 
 ```bash
 npm run dev
 ```
 
+## Vercel Deploy
+
+1. Vercel'de PostgreSQL/Neon/Supabase gibi dis bir Postgres DB bagla.
+2. Project Environment Variables:
+   - `DATABASE_URL`
+   - `ADMIN_KEY`
+3. Vercel Build Command'i su yap:
+
+```bash
+npm run vercel-build
+```
+
+Bu komut deploy sirasinda migration'lari uygular ve sonra Next build alir.
+
 ## Ortam Degiskenleri
 
-`.env.example`:
-
 ```env
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DB_NAME?sslmode=require"
 ADMIN_KEY="dream-admin-2026"
 ```
 
@@ -80,14 +94,15 @@ ADMIN_KEY="dream-admin-2026"
 
 - `npm run dev`: gelistirme sunucusu
 - `npm run build`: production build
+- `npm run vercel-build`: Vercel build + migrate deploy
 - `npm run start`: production calistirma
 - `npm run lint`: ESLint
-- `npm run db:migrate`: Prisma migration
-- `npm run db:push`: schema push
-- `npm run db:seed`: ornek veri ekleme
+- `npm run db:migrate`: development migration
+- `npm run db:deploy`: production migration deploy
+- `npm run db:seed`: ornek veri
 
 ## Notlar
 
+- SQLite, Vercel serverless ortaminda kalici ve guvenli cozum degildir.
 - Admin endpointleri `x-admin-key` header'i ile korunur.
-- Public endpoint, tum talepleri degil sadece son 6 talebi sinirli alanlarla dondurur.
-- `prisma/dev.db` dosyasi `.gitignore` ile dislanmistir.
+- Public endpoint, son 6 talebi sinirli alanlarla dondurur.
