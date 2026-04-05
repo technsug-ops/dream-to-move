@@ -1,0 +1,53 @@
+.page {
+  min-height: 100vh;
+  padding: 36px 16px 64px;
+  background: linear-gradient(160deg, #eff6ff 0%, #fdf8f1 55%, #f5faff 100%);
+}
+
+.main {
+  width: min(1080px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 16px;
+}
+
+.header {
+  border: 1px solid #d8e0ef;
+  border-radius: 16px;
+  background: #ffffff;
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.7rem;
+  color: #486087;
+  font-weight: 700;
+}
+
+.header h1 {
+  font-size: 1.65rem;
+  color: #1b2c47;
+}
+
+.header p {
+  margin-top: 4px;
+  color: #455472;
+}
+
+.header a {
+  font-weight: 700;
+  color: #0e5ea8;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .header {
+    flex-direction: column;
+  }
+}
